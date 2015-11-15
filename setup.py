@@ -6,7 +6,13 @@ from setuptools import setup
 # in case it isn't installed.
 import imp
 import sys
-mod = imp.new_module("BeautifulSoup")
+PY3 = (sys.version_info[0] >= 3)
+if PY3:
+    mod = imp.new_module("BeautifulSoup4")
+    install_requires = ["BeautifulSoup4"]
+else:
+    mod = imp.new_module("BeautifulSoup")
+    install_requires = ["BeautifulSoup"]
 mod.BeautifulSoup = None
 mod.Comment = None
 sys.modules["BeautifulSoup"] = mod
@@ -25,7 +31,7 @@ setup(
     author = 'Samuel Stauffer',
     author_email = 'samuel@lefora.com',
     url = 'http://github.com/samuel/python-scrubber/tree/master',
-    install_requires = ["BeautifulSoup"],
+    install_requires = install_requires,
     packages = ['scrubber'],
     license = "BSD",
     classifiers = [

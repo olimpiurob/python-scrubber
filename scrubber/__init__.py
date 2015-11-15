@@ -12,9 +12,14 @@ __license__ = "BSD"
 __all__ = ['Scrubber', 'SelectiveScriptScrubber', 'ScrubberWarning', 'UnapprovedJavascript', 'urlize']
 
 import re, string
-from urlparse import urljoin
+try:
+    from urlparse import urljoin
+    from BeautifulSoup import BeautifulSoup, Comment
+except ImportError:
+    from urllib.parse import urljoin
+    from bs4 import BeautifulSoup, Comment
 from itertools import chain
-from BeautifulSoup import BeautifulSoup, Comment
+
 
 def urlize(text, trim_url_limit=None, nofollow=False, autoescape=False):
     """Converts any URLs in text into clickable links.
@@ -30,10 +35,10 @@ def urlize(text, trim_url_limit=None, nofollow=False, autoescape=False):
     *Modified from Django*
     """
     from urllib import quote as urlquote
-    
+
     LEADING_PUNCTUATION  = ['(', '<', '&lt;']
     TRAILING_PUNCTUATION = ['.', ',', ')', '>', '\n', '&gt;']
-    
+
     word_split_re = re.compile(r'([\s\xa0]+|&nbsp;)') # a0 == NBSP
     punctuation_re = re.compile('^(?P<lead>(?:%s)*)(?P<middle>.*?)(?P<trail>(?:%s)*)$' % \
         ('|'.join([re.escape(x) for x in LEADING_PUNCTUATION]),
@@ -78,7 +83,7 @@ def urlize(text, trim_url_limit=None, nofollow=False, autoescape=False):
         elif autoescape:
             words[i] = escape(word)
     return u''.join(words)
-    
+
 class ScrubberWarning(object):
     pass
 
