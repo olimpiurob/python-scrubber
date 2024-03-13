@@ -43,7 +43,7 @@ def urlize(text, trim_url_limit=None, nofollow=False, autoescape=False):
 
     *Modified from Django*
     """
-    from urllib import quote as urlquote
+    from urllib.parse import quote as urlquote
 
     LEADING_PUNCTUATION = ["(", "<", "&lt;"]
     TRAILING_PUNCTUATION = [".", ",", ")", ">", "\n", "&gt;"]
@@ -57,7 +57,6 @@ def urlize(text, trim_url_limit=None, nofollow=False, autoescape=False):
         )
     )
     simple_email_re = re.compile(r"^\S+@[a-zA-Z0-9._-]+\.[a-zA-Z0-9._-]+$")
-    del x  # Temporary variable
 
     def escape(html):
         return (
@@ -408,7 +407,7 @@ class Scrubber(object):
         self.warnings = []
 
         html = self._scrub_html_pre(html)
-        soup = BeautifulSoup(html)
+        soup = BeautifulSoup(html, features="lxml")
         self._scrub_soup(soup)
         html = str(soup)
         return self._scrub_html_post(html)
