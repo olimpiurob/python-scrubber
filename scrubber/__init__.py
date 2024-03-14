@@ -80,7 +80,6 @@ def urlize(text, trim_url_limit=None, nofollow=False, autoescape=False):
             match = punctuation_re.match(word.replace("\u2019", "'"))
         if match:
             lead, middle, trail = match.groups()
-            middle = middle.encode("utf-8")
             # Make URL we want to point to.
             url = None
             if middle.startswith("http://") or middle.startswith("https://"):
@@ -114,7 +113,7 @@ def urlize(text, trim_url_limit=None, nofollow=False, autoescape=False):
                     nofollow_attr,
                     trimmed,
                 )
-                words[i] = "%s%s%s" % (lead, middle.decode("utf-8"), trail)
+                words[i] = "%s%s%s" % (lead, middle, trail)
             elif autoescape:
                 words[i] = escape(word)
         elif autoescape:
@@ -409,7 +408,7 @@ class Scrubber(object):
         html = self._scrub_html_pre(html)
         soup = BeautifulSoup(html, features="lxml")
         self._scrub_soup(soup)
-        html = str(soup)
+        html = soup.decode("utf-8")
         return self._scrub_html_post(html)
 
 
